@@ -1,0 +1,709 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F60C07662E54EF57004CAB79 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C07652E54EF57004CAB79 /* Permissions.swift */; };
+		F60C07692E909D30004CAB79 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C07682E909D30004CAB79 /* SettingsView.swift */; };
+		F630BF882E497C5E0013F0BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F630BF872E497C5E0013F0BF /* LaunchScreen.storyboard */; };
+		F677D1C02E471DF100A38441 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1BF2E471DF100A38441 /* CardView.swift */; };
+		F677D1C22E471E8C00A38441 /* ProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1C12E471E8C00A38441 /* ProfitView.swift */; };
+		F677D1C42E471E9E00A38441 /* CashBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1C32E471E9E00A38441 /* CashBalanceView.swift */; };
+		F677D1C62E471EAF00A38441 /* TransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1C52E471EAF00A38441 /* TransactionView.swift */; };
+		F677D1CE2E4867A300A38441 /* CashFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1CD2E4867A300A38441 /* CashFlowView.swift */; };
+		F677D1D02E48739400A38441 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F677D1CF2E48739400A38441 /* InstructionView.swift */; };
+		F67ADAF82E385AD200184D15 /* CardManagementApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADAF72E385AD200184D15 /* CardManagementApp.swift */; };
+		F67ADAFA2E385AD200184D15 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADAF92E385AD200184D15 /* ContentView.swift */; };
+		F67ADAFC2E385AD600184D15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F67ADAFB2E385AD600184D15 /* Assets.xcassets */; };
+		F67ADAFF2E385AD600184D15 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F67ADAFE2E385AD600184D15 /* Preview Assets.xcassets */; };
+		F67ADB012E385AD600184D15 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADB002E385AD600184D15 /* Persistence.swift */; };
+		F67ADB042E385AD600184D15 /* CardManagement.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F67ADB022E385AD600184D15 /* CardManagement.xcdatamodeld */; };
+		F67ADB0E2E385AD600184D15 /* CardManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADB0D2E385AD600184D15 /* CardManagementTests.swift */; };
+		F67ADB182E385AD600184D15 /* CardManagementUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADB172E385AD600184D15 /* CardManagementUITests.swift */; };
+		F67ADB1A2E385AD600184D15 /* CardManagementUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67ADB192E385AD600184D15 /* CardManagementUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F67ADB0A2E385AD600184D15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F67ADAEC2E385AD200184D15 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F67ADAF32E385AD200184D15;
+			remoteInfo = CardManagement;
+		};
+		F67ADB142E385AD600184D15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F67ADAEC2E385AD200184D15 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F67ADAF32E385AD200184D15;
+			remoteInfo = CardManagement;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F60C07642E4EC4FD004CAB79 /* CardManagement 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 13.xcdatamodel"; sourceTree = "<group>"; };
+		F60C07652E54EF57004CAB79 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
+		F60C07672E5507E9004CAB79 /* CardManagement 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 14.xcdatamodel"; sourceTree = "<group>"; };
+		F60C07682E909D30004CAB79 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F630BF862E4977A90013F0BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F630BF872E497C5E0013F0BF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F630BF892E4983E80013F0BF /* CardManagement.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardManagement.xctestplan; sourceTree = "<group>"; };
+		F677D1AC2E4190CE00A38441 /* 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 2.xcdatamodel; sourceTree = "<group>"; };
+		F677D1AD2E42A5AC00A38441 /* 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 3.xcdatamodel; sourceTree = "<group>"; };
+		F677D1AE2E42DBE600A38441 /* 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 4.xcdatamodel; sourceTree = "<group>"; };
+		F677D1AF2E44075300A38441 /* 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 5.xcdatamodel; sourceTree = "<group>"; };
+		F677D1B02E4407F600A38441 /* 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 6.xcdatamodel; sourceTree = "<group>"; };
+		F677D1B12E44094100A38441 /* 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 7.xcdatamodel; sourceTree = "<group>"; };
+		F677D1B22E4409B800A38441 /*  2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = " 2.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B32E440B0000A38441 /* 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 8.xcdatamodel; sourceTree = "<group>"; };
+		F677D1B42E440CAC00A38441 /* CardManagement 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 2.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B52E440D0800A38441 /* CardManagement 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 3.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B62E440DF000A38441 /* CardManagement 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 4.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B72E440ECD00A38441 /* CardManagement 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 5.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B82E440F8500A38441 /* CardManagement 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 6.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1B92E440FD000A38441 /* CardManagement 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 7.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1BA2E46F76B00A38441 /* CardManagement 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 8.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1BB2E4709AD00A38441 /* CardManagement 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 9.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1BC2E470A5200A38441 /* CardManagement 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 10.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1BF2E471DF100A38441 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		F677D1C12E471E8C00A38441 /* ProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitView.swift; sourceTree = "<group>"; };
+		F677D1C32E471E9E00A38441 /* CashBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashBalanceView.swift; sourceTree = "<group>"; };
+		F677D1C52E471EAF00A38441 /* TransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionView.swift; sourceTree = "<group>"; };
+		F677D1CB2E48655600A38441 /* CardManagement 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 11.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1CC2E4865AE00A38441 /* CardManagement 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 12.xcdatamodel"; sourceTree = "<group>"; };
+		F677D1CD2E4867A300A38441 /* CashFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowView.swift; sourceTree = "<group>"; };
+		F677D1CF2E48739400A38441 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		F67ADAF42E385AD200184D15 /* CardManagement.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardManagement.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F67ADAF72E385AD200184D15 /* CardManagementApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardManagementApp.swift; sourceTree = "<group>"; };
+		F67ADAF92E385AD200184D15 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F67ADAFB2E385AD600184D15 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F67ADAFE2E385AD600184D15 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F67ADB002E385AD600184D15 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		F67ADB032E385AD600184D15 /* CardManagement.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CardManagement.xcdatamodel; sourceTree = "<group>"; };
+		F67ADB092E385AD600184D15 /* CardManagementTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardManagementTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F67ADB0D2E385AD600184D15 /* CardManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardManagementTests.swift; sourceTree = "<group>"; };
+		F67ADB132E385AD600184D15 /* CardManagementUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardManagementUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F67ADB172E385AD600184D15 /* CardManagementUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardManagementUITests.swift; sourceTree = "<group>"; };
+		F67ADB192E385AD600184D15 /* CardManagementUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardManagementUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F67ADAF12E385AD200184D15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB062E385AD600184D15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB102E385AD600184D15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F67ADAEB2E385AD200184D15 = {
+			isa = PBXGroup;
+			children = (
+				F630BF892E4983E80013F0BF /* CardManagement.xctestplan */,
+				F630BF872E497C5E0013F0BF /* LaunchScreen.storyboard */,
+				F67ADAF62E385AD200184D15 /* CardManagement */,
+				F67ADB0C2E385AD600184D15 /* CardManagementTests */,
+				F67ADB162E385AD600184D15 /* CardManagementUITests */,
+				F67ADAF52E385AD200184D15 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F67ADAF52E385AD200184D15 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F67ADAF42E385AD200184D15 /* CardManagement.app */,
+				F67ADB092E385AD600184D15 /* CardManagementTests.xctest */,
+				F67ADB132E385AD600184D15 /* CardManagementUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F67ADAF62E385AD200184D15 /* CardManagement */ = {
+			isa = PBXGroup;
+			children = (
+				F60C07682E909D30004CAB79 /* SettingsView.swift */,
+				F630BF862E4977A90013F0BF /* Info.plist */,
+				F67ADAF72E385AD200184D15 /* CardManagementApp.swift */,
+				F67ADAF92E385AD200184D15 /* ContentView.swift */,
+				F677D1BF2E471DF100A38441 /* CardView.swift */,
+				F677D1C12E471E8C00A38441 /* ProfitView.swift */,
+				F677D1C32E471E9E00A38441 /* CashBalanceView.swift */,
+				F677D1C52E471EAF00A38441 /* TransactionView.swift */,
+				F67ADAFB2E385AD600184D15 /* Assets.xcassets */,
+				F67ADB002E385AD600184D15 /* Persistence.swift */,
+				F67ADB022E385AD600184D15 /* CardManagement.xcdatamodeld */,
+				F67ADAFD2E385AD600184D15 /* Preview Content */,
+				F677D1CD2E4867A300A38441 /* CashFlowView.swift */,
+				F677D1CF2E48739400A38441 /* InstructionView.swift */,
+				F60C07652E54EF57004CAB79 /* Permissions.swift */,
+			);
+			path = CardManagement;
+			sourceTree = "<group>";
+		};
+		F67ADAFD2E385AD600184D15 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				F67ADAFE2E385AD600184D15 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F67ADB0C2E385AD600184D15 /* CardManagementTests */ = {
+			isa = PBXGroup;
+			children = (
+				F67ADB0D2E385AD600184D15 /* CardManagementTests.swift */,
+			);
+			path = CardManagementTests;
+			sourceTree = "<group>";
+		};
+		F67ADB162E385AD600184D15 /* CardManagementUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F67ADB172E385AD600184D15 /* CardManagementUITests.swift */,
+				F67ADB192E385AD600184D15 /* CardManagementUITestsLaunchTests.swift */,
+			);
+			path = CardManagementUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F67ADAF32E385AD200184D15 /* CardManagement */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F67ADB1D2E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagement" */;
+			buildPhases = (
+				F67ADAF02E385AD200184D15 /* Sources */,
+				F67ADAF12E385AD200184D15 /* Frameworks */,
+				F67ADAF22E385AD200184D15 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CardManagement;
+			productName = CardManagement;
+			productReference = F67ADAF42E385AD200184D15 /* CardManagement.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F67ADB082E385AD600184D15 /* CardManagementTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F67ADB202E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagementTests" */;
+			buildPhases = (
+				F67ADB052E385AD600184D15 /* Sources */,
+				F67ADB062E385AD600184D15 /* Frameworks */,
+				F67ADB072E385AD600184D15 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F67ADB0B2E385AD600184D15 /* PBXTargetDependency */,
+			);
+			name = CardManagementTests;
+			productName = CardManagementTests;
+			productReference = F67ADB092E385AD600184D15 /* CardManagementTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F67ADB122E385AD600184D15 /* CardManagementUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F67ADB232E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagementUITests" */;
+			buildPhases = (
+				F67ADB0F2E385AD600184D15 /* Sources */,
+				F67ADB102E385AD600184D15 /* Frameworks */,
+				F67ADB112E385AD600184D15 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F67ADB152E385AD600184D15 /* PBXTargetDependency */,
+			);
+			name = CardManagementUITests;
+			productName = CardManagementUITests;
+			productReference = F67ADB132E385AD600184D15 /* CardManagementUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F67ADAEC2E385AD200184D15 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					F67ADAF32E385AD200184D15 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					F67ADB082E385AD600184D15 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = F67ADAF32E385AD200184D15;
+					};
+					F67ADB122E385AD600184D15 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = F67ADAF32E385AD200184D15;
+					};
+				};
+			};
+			buildConfigurationList = F67ADAEF2E385AD200184D15 /* Build configuration list for PBXProject "CardManagement" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F67ADAEB2E385AD200184D15;
+			productRefGroup = F67ADAF52E385AD200184D15 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F67ADAF32E385AD200184D15 /* CardManagement */,
+				F67ADB082E385AD600184D15 /* CardManagementTests */,
+				F67ADB122E385AD600184D15 /* CardManagementUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F67ADAF22E385AD200184D15 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F630BF882E497C5E0013F0BF /* LaunchScreen.storyboard in Resources */,
+				F67ADAFF2E385AD600184D15 /* Preview Assets.xcassets in Resources */,
+				F67ADAFC2E385AD600184D15 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB072E385AD600184D15 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB112E385AD600184D15 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F67ADAF02E385AD200184D15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F67ADB012E385AD600184D15 /* Persistence.swift in Sources */,
+				F677D1C62E471EAF00A38441 /* TransactionView.swift in Sources */,
+				F67ADAFA2E385AD200184D15 /* ContentView.swift in Sources */,
+				F60C07662E54EF57004CAB79 /* Permissions.swift in Sources */,
+				F677D1C22E471E8C00A38441 /* ProfitView.swift in Sources */,
+				F677D1C42E471E9E00A38441 /* CashBalanceView.swift in Sources */,
+				F67ADB042E385AD600184D15 /* CardManagement.xcdatamodeld in Sources */,
+				F67ADAF82E385AD200184D15 /* CardManagementApp.swift in Sources */,
+				F677D1CE2E4867A300A38441 /* CashFlowView.swift in Sources */,
+				F60C07692E909D30004CAB79 /* SettingsView.swift in Sources */,
+				F677D1C02E471DF100A38441 /* CardView.swift in Sources */,
+				F677D1D02E48739400A38441 /* InstructionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB052E385AD600184D15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F67ADB0E2E385AD600184D15 /* CardManagementTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F67ADB0F2E385AD600184D15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F67ADB182E385AD600184D15 /* CardManagementUITests.swift in Sources */,
+				F67ADB1A2E385AD600184D15 /* CardManagementUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F67ADB0B2E385AD600184D15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F67ADAF32E385AD200184D15 /* CardManagement */;
+			targetProxy = F67ADB0A2E385AD600184D15 /* PBXContainerItemProxy */;
+		};
+		F67ADB152E385AD600184D15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F67ADAF32E385AD200184D15 /* CardManagement */;
+			targetProxy = F67ADB142E385AD600184D15 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F67ADB1B2E385AD600184D15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F67ADB1C2E385AD600184D15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F67ADB1E2E385AD600184D15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CardManagement/Preview Content\"";
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CardManagement/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CardManagement;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Use camera to capture photo of the cards in the Card and the Trasaction";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select transaction photos";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INSTALL_OWNER = ethanying;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 7;
+				PRODUCT_BUNDLE_IDENTIFIER = zhulingfang.CardManagement;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F67ADB1F2E385AD600184D15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CardManagement/Preview Content\"";
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CardManagement/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CardManagement;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Use camera to capture photo of the cards in the Card and the Trasaction";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select transaction photos";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INSTALL_OWNER = ethanying;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 7;
+				PRODUCT_BUNDLE_IDENTIFIER = zhulingfang.CardManagement;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F67ADB212E385AD600184D15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lingfangCardManagementTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CardManagement.app/CardManagement";
+			};
+			name = Debug;
+		};
+		F67ADB222E385AD600184D15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lingfangCardManagementTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CardManagement.app/CardManagement";
+			};
+			name = Release;
+		};
+		F67ADB242E385AD600184D15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lingfang.CardManagementUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CardManagement;
+			};
+			name = Debug;
+		};
+		F67ADB252E385AD600184D15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lingfang.CardManagementUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CardManagement;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F67ADAEF2E385AD200184D15 /* Build configuration list for PBXProject "CardManagement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F67ADB1B2E385AD600184D15 /* Debug */,
+				F67ADB1C2E385AD600184D15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F67ADB1D2E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F67ADB1E2E385AD600184D15 /* Debug */,
+				F67ADB1F2E385AD600184D15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F67ADB202E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagementTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F67ADB212E385AD600184D15 /* Debug */,
+				F67ADB222E385AD600184D15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F67ADB232E385AD600184D15 /* Build configuration list for PBXNativeTarget "CardManagementUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F67ADB242E385AD600184D15 /* Debug */,
+				F67ADB252E385AD600184D15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F67ADB022E385AD600184D15 /* CardManagement.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F60C07672E5507E9004CAB79 /* CardManagement 14.xcdatamodel */,
+				F60C07642E4EC4FD004CAB79 /* CardManagement 13.xcdatamodel */,
+				F677D1CC2E4865AE00A38441 /* CardManagement 12.xcdatamodel */,
+				F677D1CB2E48655600A38441 /* CardManagement 11.xcdatamodel */,
+				F677D1BC2E470A5200A38441 /* CardManagement 10.xcdatamodel */,
+				F677D1BB2E4709AD00A38441 /* CardManagement 9.xcdatamodel */,
+				F677D1BA2E46F76B00A38441 /* CardManagement 8.xcdatamodel */,
+				F677D1B92E440FD000A38441 /* CardManagement 7.xcdatamodel */,
+				F677D1B82E440F8500A38441 /* CardManagement 6.xcdatamodel */,
+				F677D1B72E440ECD00A38441 /* CardManagement 5.xcdatamodel */,
+				F677D1B62E440DF000A38441 /* CardManagement 4.xcdatamodel */,
+				F677D1B52E440D0800A38441 /* CardManagement 3.xcdatamodel */,
+				F677D1B42E440CAC00A38441 /* CardManagement 2.xcdatamodel */,
+				F677D1B32E440B0000A38441 /* 8.xcdatamodel */,
+				F677D1B22E4409B800A38441 /*  2.xcdatamodel */,
+				F677D1B12E44094100A38441 /* 7.xcdatamodel */,
+				F677D1B02E4407F600A38441 /* 6.xcdatamodel */,
+				F677D1AF2E44075300A38441 /* 5.xcdatamodel */,
+				F677D1AE2E42DBE600A38441 /* 4.xcdatamodel */,
+				F677D1AD2E42A5AC00A38441 /* 3.xcdatamodel */,
+				F677D1AC2E4190CE00A38441 /* 2.xcdatamodel */,
+				F67ADB032E385AD600184D15 /* CardManagement.xcdatamodel */,
+			);
+			currentVersion = F67ADB032E385AD600184D15 /* CardManagement.xcdatamodel */;
+			path = CardManagement.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F67ADAEC2E385AD200184D15 /* Project object */;
+}

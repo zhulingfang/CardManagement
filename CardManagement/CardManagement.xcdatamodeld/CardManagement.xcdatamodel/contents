@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Card" representedClassName="Card" syncable="YES" codeGenerationType="class">
+        <attribute name="available" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="currentValue" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="dateSold" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="paid" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="photoData" optional="YES" attributeType="Binary"/>
+        <attribute name="sold" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="tradeInValue" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="tradeOutValue" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+    </entity>
+    <entity name="CashBalance" representedClassName="CashBalance" syncable="YES" codeGenerationType="class">
+        <attribute name="balance" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="cashFlowPk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="change" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="pk" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="transactionPk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="CashFlow" representedClassName="CashFlow" syncable="YES" codeGenerationType="class">
+        <attribute name="change" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="pk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Profit" representedClassName="Profit" syncable="YES" codeGenerationType="class">
+        <attribute name="change" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="pk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="total" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="transactionPk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Transaction" representedClassName="Transaction" syncable="YES" codeGenerationType="class">
+        <attribute name="cardsIn" optional="YES" attributeType="String"/>
+        <attribute name="cardsOut" optional="YES" attributeType="String"/>
+        <attribute name="cashIn" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="cashOut" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="feesAndShipping" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="photoData" optional="YES" attributeType="Binary"/>
+        <attribute name="pk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="platform" optional="YES" attributeType="String"/>
+        <attribute name="platformId" optional="YES" attributeType="String"/>
+        <attribute name="profit" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+    </entity>
+</model>

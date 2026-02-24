@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "8DD94BB8-4C00-4EE4-978D-462A88A8011C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:CardManagement.xcodeproj",
+      "identifier" : "F67ADAF32E385AD200184D15",
+      "name" : "CardManagement"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:CardManagement.xcodeproj",
+        "identifier" : "F67ADB082E385AD600184D15",
+        "name" : "CardManagementTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:CardManagement.xcodeproj",
+        "identifier" : "F67ADB122E385AD600184D15",
+        "name" : "CardManagementUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
