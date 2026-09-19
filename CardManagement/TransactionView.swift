@@ -54,14 +54,14 @@ struct EditTransactionView: View {
         request5.sortDescriptors = []
         _existingTransaction = FetchRequest<Transaction>(fetchRequest: request5)
         
-        platform = selectedTransaction.platform ?? defaultPlatform
-        platformId = selectedTransaction.platformId ?? defaultPlatformId
-        cashInText = selectedTransaction.cashIn?.description ?? defaultCashInText
-        cashOutText = selectedTransaction.cashOut?.description ?? defaultCashOutText
-        feesAndShippingText = selectedTransaction.feesAndShipping?.description ?? defaultFeesAndShippingText
-        dateTime = selectedTransaction.dateTime ?? defaultDateTime
-        tradeInCards = defaultTradeInCards
-        tradeOutCards = defaultTradeOutCards
+        platform = selectedTransaction.platform ?? ""
+        platformId = selectedTransaction.platformId ?? ""
+        cashInText = selectedTransaction.cashIn?.description ?? "0.00"
+        cashOutText = selectedTransaction.cashOut?.description ?? "0.00"
+        feesAndShippingText = selectedTransaction.feesAndShipping?.description ?? "0.00"
+        dateTime = selectedTransaction.dateTime ?? Date.distantPast
+        tradeInCards = []
+        tradeOutCards = []
     }
     
     @FetchRequest
@@ -82,11 +82,11 @@ struct EditTransactionView: View {
     @FetchRequest
     private var existingTransaction: FetchedResults<Transaction>
     
-    @State private var platform: String = ""
-    @State private var platformId: String = ""
-    @State private var cashInText = ""
-    @State private var cashOutText = ""
-    @State private var feesAndShippingText = ""
+    @State private var platform: String
+    @State private var platformId: String
+    @State private var cashInText: String
+    @State private var cashOutText: String
+    @State private var feesAndShippingText: String
     @State private var dateTime: Date
     @State private var tradeInCards: Set<Card>
     @State private var tradeOutCards: Set<Card>

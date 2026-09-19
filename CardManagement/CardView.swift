@@ -11,14 +11,14 @@ struct EditCardView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
     
-    @State private var tradeInValueText: String = ""
-    @State private var tradeOutValueText: String = ""
-    @State private var currentValueText: String = ""
-    @State private var paidText: String = ""
-    @State private var soldText: String = ""
+    @State private var tradeInValueText: String
+    @State private var tradeOutValueText: String
+    @State private var currentValueText: String
+    @State private var paidText: String
+    @State private var soldText: String
     @State private var dateAdded: Date
     @State private var dateSold: Date
-    @State private var note: String = ""
+    @State private var note: String
     @State private var available: Bool
     
     private var defaultTradeInValue = "0.00"
@@ -45,14 +45,14 @@ struct EditCardView: View {
     init(selectedCard:Card) {
         self.selectedCard = selectedCard
         available = selectedCard.available
-        currentValueText = selectedCard.currentValue?.description ?? defaultCurrentValue
-        note = selectedCard.note ?? defaultNote
-        tradeInValueText = selectedCard.tradeInValue?.description ?? defaultTradeInValue
-        tradeOutValueText = selectedCard.tradeOutValue?.description ?? defaultTradeOutValue
-        dateAdded = selectedCard.dateAdded ?? defaultdDateAdded
-        paidText = selectedCard.paid?.description ?? defaultPaid
-        soldText = selectedCard.sold?.description ?? defaultSold
-        dateSold = selectedCard.dateSold ?? defaultDateSold
+        currentValueText = selectedCard.currentValue?.description ?? "0.00"
+        note = selectedCard.note ?? "No description"
+        tradeInValueText = selectedCard.tradeInValue?.description ?? "0.00"
+        tradeOutValueText = selectedCard.tradeOutValue?.description ?? "0.00"
+        dateAdded = selectedCard.dateAdded ?? Date()
+        paidText = selectedCard.paid?.description ?? "0.00"
+        soldText = selectedCard.sold?.description ?? "0.00"
+        dateSold = selectedCard.dateSold ?? Date()
         
         let request: NSFetchRequest<Card> = Card.fetchRequest()
         request.fetchLimit = 1;

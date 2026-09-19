@@ -35,7 +35,7 @@ class AppSettings: ObservableObject {
     init() {
         // Load saved settings or use defaults
         self.tradeInCashRatio = Decimal(UserDefaults.standard.double(forKey: "tradeInCashRatio") != 0 ?
-                                      UserDefaults.standard.double(forKey: "tradeInCashRatio") : 0.90)
+                                        UserDefaults.standard.double(forKey: "tradeInCashRatio") : 1.00)
         self.defaultCurrency = UserDefaults.standard.string(forKey: "defaultCurrency") ?? "USD"
         self.maxCardTitleLength = UserDefaults.standard.integer(forKey: "maxCardTitleLength") != 0 ?
                                  UserDefaults.standard.integer(forKey: "maxCardTitleLength") : 50

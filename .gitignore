@@ -1,0 +1,28 @@
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode per-user data
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+*.moved-aside
+
+# Xcode build output
+build/
+DerivedData/
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.xcresult/
+
+# Swift Package Manager build output
+.build/
+.swiftpm/xcode/package.xcworkspace/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
