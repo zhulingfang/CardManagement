@@ -60,7 +60,19 @@ struct ContentView: View {
     @State private var path = NavigationPath()
     @Environment(\.managedObjectContext) var moc
     @StateObject private var settings = appSettings
-    @State private var items: [Card] = []
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Card.dateAdded, ascending: false)],
+        predicate: NSPredicate(format: "available == YES"),
+        animation: .default
+    )
+    private var availableCards: FetchedResults<Card>
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Card.dateAdded, ascending: false)],
+        predicate: NSPredicate(format: "available == NO"),
+        animation: .default
+    )
+    private var soldCards: FetchedResults<Card>
     @State private var transactions: [Transaction] = []
     @State private var cashBalances: [CashBalance] = []
     @State private var profits: [Profit] = []
@@ -88,14 +100,6 @@ struct ContentView: View {
         case dateAddedOldest = "Date Added Oldest"
         case currentValueHighest = "Current Value Highest"
         case currentValueLowest = "Current Value Lowest"
-    }
-    
-    private var availableCards: [Card] {
-        items.filter { $0.available == true }
-    }
-    
-    private var soldCards: [Card] {
-        items.filter { $0.available == false }
     }
     
     private var lastCashBalanceValue: NSDecimalNumber {
@@ -239,31 +243,12 @@ struct ContentView: View {
     }
     
     private func refreshData() {
-        fetchCards()
         fetchTransactions()
         fetchCashBalances()
         fetchCashFlows()
         fetchProfits()
         fetchCounts()
         fetchLatestBalances()
-    }
-    
-    private func fetchCards() {
-        let fetchRequest = NSFetchRequest<Card>(entityName: "Card")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Card.dateAdded, ascending: false)]
-        
-        // Fetch Card EXCEPT photoData
-        fetchRequest.propertiesToFetch = [
-            "id", "title", "available", "currentValue", "dateAdded",
-            "dateSold", "note", "paid", "sold",
-            "timestamp", "tradeInValue", "tradeOutValue"
-        ]
-        
-        do {
-            items = try moc.fetch(fetchRequest)
-        } catch {
-            print("Error fetching cards: \(error)")
-        }
     }
     
     private var totalAvailableCardsValue: NSDecimalNumber {
@@ -424,7 +409,7 @@ extension ContentView {
             
             // Cards List
             List {
-                ForEach(filteredAndSortedCards(cards: availableCards)) { item in
+                ForEach(filteredAndSortedCards(cards: Array(availableCards))) { item in
                     NavigationLink {
                         ObservedCardView(card: item) { card in
                             cardDetailView(for: card)
@@ -590,7 +575,7 @@ extension ContentView {
             
             // Cards List
             List {
-                ForEach(filteredAndSortedCards(cards: soldCards)) { item in
+                ForEach(filteredAndSortedCards(cards: Array(soldCards))) { item in
                     NavigationLink {
                         ObservedCardView(card: item) { card in
                             soldCardDetailView(for: card)

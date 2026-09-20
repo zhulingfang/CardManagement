@@ -64,7 +64,7 @@ struct AdjustProfitView: View {
                 Section("Value changed") {
                     TextField("amount", text: $changeText)
                         .keyboardType(.decimalPad)
-                        .onChange(of: changeText) { newValue in
+                        .onChange(of: changeText) { _, newValue in
                             // Convert string to Decimal, handling invalid input gracefully
                             if let decimal = Decimal(string: newValue) {
                                 change = decimal

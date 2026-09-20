@@ -115,7 +115,7 @@ struct EditTransactionView: View {
             Form {
                 Section("When trade happened"){
                     DatePicker("When", selection: $dateTime, displayedComponents: [.date])
-                        .onChange(of: dateTime) { newValue in
+                        .onChange(of: dateTime) { _, newValue in
                             if newValue != Date.distantPast {
                                 isDateTimeChanged = true
                             } else {
@@ -225,7 +225,7 @@ struct EditTransactionView: View {
             tradeOutCards = getCardsFromTitleString(selectedTransaction.cardsOut!, from: existingCards)
             oldTradeOutList = tradeOutCards
         }
-        .onChange(of: selectedPhoto) { newValue in
+        .onChange(of: selectedPhoto) { _, newValue in
             Task {
                 await loadSelectedPhoto()
                 showCamera = false
@@ -647,7 +647,7 @@ struct AddTransactionView: View {
                 Text("Save")
             }
         }
-        .onChange(of: selectedPhoto) { newValue in
+        .onChange(of: selectedPhoto) { _, newValue in
             Task {
                 showCamera = false
                 showPhotoLibrary = false

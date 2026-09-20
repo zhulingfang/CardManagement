@@ -33,7 +33,7 @@ struct AdjustCashBalanceView: View {
                 
                 Section(header: Text("Note")) {
                     TextField("Reason for adjustment", text: $note)
-                        .onChange(of: note) { newValue in
+                        .onChange(of: note) { _, newValue in
                             // Limit note length to prevent excessively long notes
                             if newValue.count > 100 {
                                 note = String(newValue.prefix(100))
@@ -49,7 +49,7 @@ struct AdjustCashBalanceView: View {
                 Section("Amount to Add/Subtract") {
                     TextField("0.00", text: $changeText)
                         .keyboardType(.decimalPad)
-                        .onChange(of: changeText) { newValue in
+                        .onChange(of: changeText) { _, newValue in
                             // Format the input to ensure valid decimal format
                             changeText = formatDecimalInput(newValue, allowNegative: true)
                         }

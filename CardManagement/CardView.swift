@@ -150,14 +150,14 @@ struct EditCardView: View {
                 
                 Section("When this card added") {
                     DatePicker("When", selection: $dateAdded, displayedComponents: [.date])
-                        .onChange(of: dateAdded) { newValue in
+                        .onChange(of: dateAdded) { _, newValue in
                             isDateAddedChanged = true
                         }
                 }
                 
                 Section("When this card sold") {
                     DatePicker("When", selection: $dateSold, displayedComponents: [.date])
-                        .onChange(of: dateSold) { newValue in
+                        .onChange(of: dateSold) { _, newValue in
                             isDateSoldChanged = true
                         }
                 }
@@ -186,7 +186,7 @@ struct EditCardView: View {
         .onAppear {
             loadPhotoData()
         }
-        .onChange(of: selectedPhoto) { newValue in
+        .onChange(of: selectedPhoto) { _, newValue in
             Task {
                 showCamera = false
                 showPhotoLibrary = false
@@ -399,7 +399,7 @@ struct AddItemView: View {
             Form {
                 Section(header: Text("Card Title")) {
                     TextField("Title", text: $title)
-                        .onChange(of: title) { newValue in
+                        .onChange(of: title) { _, newValue in
                             // Limit title to 50 characters
                             if newValue.count > settings.maxCardTitleLength {
                                 title = String(newValue.prefix(settings.maxCardTitleLength))
@@ -415,7 +415,7 @@ struct AddItemView: View {
                 Section("Trade In Value") {
                     TextField("0.00", text: $tradeInValueText)
                         .keyboardType(.decimalPad)
-                        .onChange(of: tradeInValueText) { newValue in
+                        .onChange(of: tradeInValueText) { _, newValue in
                             // Format the input to ensure valid decimal format
                             tradeInValueText = formatDecimalInput(newValue)
                         }
@@ -423,7 +423,7 @@ struct AddItemView: View {
                 Section("Cash Paid") {
                     TextField("0.00", text: $paidText)
                         .keyboardType(.decimalPad)
-                        .onChange(of: paidText) { newValue in
+                        .onChange(of: paidText) { _, newValue in
                             // Format the input to ensure valid decimal format
                             paidText = formatDecimalInput(newValue)
                         }
@@ -490,7 +490,7 @@ struct AddItemView: View {
             }
             .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        .onChange(of: selectedPhoto) { newValue in
+        .onChange(of: selectedPhoto) { _, newValue in
             Task {
                 showCamera = false
                 showPhotoLibrary = false

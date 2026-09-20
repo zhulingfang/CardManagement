@@ -28,7 +28,7 @@ struct SettingsView: View {
                     
                     TextField("", text: $tradeInRatioText)
                         .keyboardType(.decimalPad)
-                        .onChange(of: tradeInRatioText) { newValue in
+                        .onChange(of: tradeInRatioText) { _, newValue in
                             tradeInRatioText = formatRatioInput(newValue)
                             if let decimal = Decimal(string: tradeInRatioText) {
                                 settings.tradeInCashRatio = decimal

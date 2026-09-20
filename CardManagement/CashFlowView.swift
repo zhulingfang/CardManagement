@@ -24,7 +24,7 @@ struct AddCashFlowView: View {
             Form {
                 Section(header: Text("Note")) {
                     TextField("Income source or expense reason", text: $note)
-                        .onChange(of: note) { newValue in
+                        .onChange(of: note) { _, newValue in
                             // Limit note length to prevent excessively long notes
                             if newValue.count > 100 {
                                 note = String(newValue.prefix(100))
@@ -40,7 +40,7 @@ struct AddCashFlowView: View {
                 Section("Amount received or spent") {
                     TextField("0.00", text: $changeText)
                         .keyboardType(.numbersAndPunctuation)
-                        .onChange(of: changeText) { newValue in
+                        .onChange(of: changeText) { _, newValue in
                             // Format the input to ensure valid decimal format
                             changeText = formatDecimalInput(newValue, allowNegative: true)
                         }
