@@ -1,6 +1,15 @@
 import SwiftUI
 import CoreData
 
+private struct ObservedCardView<Content: View>: View {
+    @ObservedObject var card: Card
+    let content: (Card) -> Content
+    
+    var body: some View {
+        content(card)
+    }
+}
+
 extension Color {
     static let michiganBlue = Color(red: 0/255, green: 39/255, blue: 76/255)
     static let michiganLightBlue = Color(red: 0/255, green: 60/255, blue: 116/255)
@@ -215,18 +224,28 @@ struct ContentView: View {
                 }
             }
             .onAppear {
-                fetchCards()
-                fetchCounts()
-                fetchLatestBalances()
+                refreshData()
             }
-            .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)) { _ in
-                // Refresh when data changes
-                fetchCards()
-                fetchCounts()
-                fetchLatestBalances()
+            .onReceive(
+                NotificationCenter.default.publisher(
+                    for: .NSManagedObjectContextDidSave,
+                    object: moc
+                )
+            ) { _ in
+                refreshData()
             }
         }
         .environmentObject(settings)
+    }
+    
+    private func refreshData() {
+        fetchCards()
+        fetchTransactions()
+        fetchCashBalances()
+        fetchCashFlows()
+        fetchProfits()
+        fetchCounts()
+        fetchLatestBalances()
     }
     
     private func fetchCards() {
@@ -407,7 +426,9 @@ extension ContentView {
             List {
                 ForEach(filteredAndSortedCards(cards: availableCards)) { item in
                     NavigationLink {
-                        cardDetailView(for: item)
+                        ObservedCardView(card: item) { card in
+                            cardDetailView(for: card)
+                        }
                             .toolbar {
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                     Button("Edit") {
@@ -419,7 +440,9 @@ extension ContentView {
                                 }
                             }
                     } label: {
-                        cardRowLabel(for: item)
+                        ObservedCardView(card: item) { card in
+                            cardRowLabel(for: card)
+                        }
                     }
                 }
             }
@@ -569,7 +592,9 @@ extension ContentView {
             List {
                 ForEach(filteredAndSortedCards(cards: soldCards)) { item in
                     NavigationLink {
-                        soldCardDetailView(for: item)
+                        ObservedCardView(card: item) { card in
+                            soldCardDetailView(for: card)
+                        }
                             .toolbar {
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                     Button("Edit") {
@@ -581,7 +606,9 @@ extension ContentView {
                                 }
                             }
                     } label: {
-                        cardRowLabel(for: item)
+                        ObservedCardView(card: item) { card in
+                            cardRowLabel(for: card)
+                        }
                     }
                 }
             }
