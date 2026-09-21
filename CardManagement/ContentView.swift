@@ -119,6 +119,85 @@ private struct StoredPhotoDetailView: View {
     }
 }
 
+private struct DashboardMetricCard: View {
+    let title: LocalizedStringResource
+    let value: String
+    let systemImage: String
+    let tint: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: systemImage)
+                .font(.title2)
+                .foregroundStyle(tint)
+
+            Spacer(minLength: 0)
+
+            Text(value)
+                .font(.title2.weight(.bold))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
+        .padding()
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+private struct ModernListRow: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(.vertical, 12)
+            .padding(.horizontal, 14)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+    }
+}
+
+private struct ListEmptyState: View {
+    let title: LocalizedStringResource
+    let message: LocalizedStringResource
+    let systemImage: String
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: systemImage)
+                .font(.system(size: 38, weight: .semibold))
+                .foregroundStyle(.tint)
+            Text(title)
+                .font(.headline)
+            Text(message)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 44)
+        .padding(.horizontal, 24)
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+    }
+}
+
+private extension View {
+    func modernListRow() -> some View {
+        modifier(ModernListRow())
+    }
+
+    func modernListStyle() -> some View {
+        listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color(.systemGroupedBackground))
+    }
+}
+
 extension Color {
     static let michiganBlue = Color(red: 0/255, green: 39/255, blue: 76/255)
     static let michiganLightBlue = Color(red: 0/255, green: 60/255, blue: 116/255)
@@ -166,7 +245,17 @@ var appSettings = AppSettings()
 
 @available(iOS 16.0, *)
 struct ContentView: View {
-    @State private var path = NavigationPath()
+    private enum AppTab: Hashable {
+        case overview
+        case cards
+        case transactions
+        case settings
+    }
+
+    @State private var selectedTab: AppTab = .overview
+    @State private var overviewPath = NavigationPath()
+    @State private var cardsPath = NavigationPath()
+    @State private var transactionsPath = NavigationPath()
     @Environment(\.managedObjectContext) var moc
     @StateObject private var settings = appSettings
     @FetchRequest(
@@ -220,133 +309,63 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack(spacing: 5) {
-                ZStack {
-                    // Centered title (ignoring the icon)
-                    Text("Card Management")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.michiganLightBlue)
-                    
-                    // Icon positioned to the left
-                    HStack {
-                        Image("card-tracker-app-icon")
-                            .resizable()
-                            .scaledToFit()
-                            .padding(.leading, UIScreen.main.bounds.width * 0.05)
-                            .frame(width: 60, height: 60)
-                        Spacer()
+        TabView(selection: $selectedTab) {
+            NavigationStack(path: $overviewPath) {
+                overviewDashboard
+                    .navigationDestination(for: String.self) { value in
+                        overviewDestination(for: value)
                     }
-                }
-                .frame(maxWidth: .infinity)
-                
-                VStack(spacing: 5) {
-                    List {
-                        // Available Cards Section
-                        NavigationLink {
-                            availableCardsView
-                        } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Available Cards: \(availableCards.count)")
-                                Text("Total Value: \(totalAvailableCardsValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding(8)
-                        
-                        // Previously Owned Cards Section
-                        NavigationLink("Previously Owned Cards: \(soldCards.count)") {
-                            soldCardsView
-                        }
-                        .padding(8)
-                        
-                        // Transactions Section
-                        NavigationLink("Card Transactions: \(transactionCount)") {
-                            transactionsView
-                        }
-                        .padding(8)
-                        
-                        // Other Cash flow Section
-                        NavigationLink("Other Cash Flow: \(cashFlowCount)") {
-                            cashFlowView
-                        }
-                        .padding(8)
-                        
-                        // Cash Balance Section
-                        NavigationLink {
-                            cashBalanceView
-                        } label: {
-                            Text("Cash Balance: ") + Text("\(lastCashBalanceValue, formatter: currencyFormatter(for: settings.defaultCurrency))").foregroundColor(.red)
-                        }
-                        .padding(8)
-                        
-                        // Total Profit Section
-                        NavigationLink("Total Profit: \(lastProfitBalanceValue, formatter: currencyFormatter(for: settings.defaultCurrency))") {
-                            profitView
-                        }
-                        .padding(8)
-                        
-                        // Settings Section
-                        NavigationLink("Settings") {
-                            settingsView
-                        }
-                        .padding(8)
-                    }
-                    
-                    // Instructions
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("To add a new card transaction, go to Available Cards to add the new cards, then choose the cards when adding the new transaction. Cash balance and Profit will be automatically updated when transaction is added or updated.")
-                            .font(.subheadline)
-                            .foregroundColor(.michiganLightBlue)
-                        
-                        Button("See more instructions") {
-                            showingDetailedInstructions = true
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.blue)
-                        .underline()
-                        .sheet(isPresented: $showingDetailedInstructions) {
-                            DetailedInstructionsView()
+            }
+            .tabItem {
+                Label("Overview", systemImage: "chart.bar.fill")
+            }
+            .tag(AppTab.overview)
+
+            NavigationStack(path: $cardsPath) {
+                availableCardsView
+                    .navigationTitle("Cards")
+                    .navigationDestination(for: String.self) { value in
+                        if value == "addCard" {
+                            AddItemView()
                         }
                     }
-                    .padding()
-                    .border(Color.blue, width: 2)
-                    
-                    Text("@ Owned by cycl0necardz")
-                        .padding()
-                        .font(.footnote)
-                }
             }
-            .navigationBarHidden(true) // Hide the default navigation bar
-            .navigationDestination(for: String.self) { value in
-                switch value {
-                case "addCard":
-                    AddItemView()
-                case "adjustCashBalance":
-                    AdjustCashBalanceView()
-                case "adjustProfit":
-                    AdjustProfitView()
-                case "addTransaction":
-                    AddTransactionView()
-                case "addCashFlow":
-                    AddCashFlowView()
-                default:
-                    Text("Unknown destination")
-                }
+            .tabItem {
+                Label("Cards", systemImage: "rectangle.stack.fill")
             }
-            .onAppear {
-                refreshData()
+            .tag(AppTab.cards)
+
+            NavigationStack(path: $transactionsPath) {
+                transactionsView
+                    .navigationTitle("Transactions")
+                    .navigationDestination(for: String.self) { value in
+                        if value == "addTransaction" {
+                            AddTransactionView()
+                        }
+                    }
             }
-            .onReceive(
-                NotificationCenter.default.publisher(
-                    for: .NSManagedObjectContextDidSave,
-                    object: moc
-                )
-            ) { _ in
-                refreshData()
+            .tabItem {
+                Label("Transactions", systemImage: "arrow.left.arrow.right")
             }
+            .tag(AppTab.transactions)
+
+            NavigationStack {
+                settingsView
+            }
+            .tabItem {
+                Label("Settings", systemImage: "gearshape.fill")
+            }
+            .tag(AppTab.settings)
+        }
+        .tint(.michiganLightBlue)
+        .onAppear { refreshData() }
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: .NSManagedObjectContextDidSave,
+                object: moc
+            )
+        ) { _ in
+            refreshData()
         }
         .environmentObject(settings)
     }
@@ -366,6 +385,172 @@ struct ContentView: View {
             return total + currentValue
         }
         return total as NSDecimalNumber
+    }
+
+    private var overviewDashboard: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                HStack(spacing: 12) {
+                    Image("card-management-v2-launch")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 52, height: 52)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Card Management")
+                            .font(.title2.weight(.bold))
+                        Text("Your collection at a glance")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                    spacing: 12
+                ) {
+                    Button { selectedTab = .cards } label: {
+                        DashboardMetricCard(
+                            title: "Available Cards",
+                            value: availableCards.count.formatted(),
+                            systemImage: "rectangle.stack.fill",
+                            tint: .blue
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    Button { selectedTab = .cards } label: {
+                        DashboardMetricCard(
+                            title: "Inventory Value",
+                            value: formattedCurrency(totalAvailableCardsValue),
+                            systemImage: "dollarsign.circle.fill",
+                            tint: .orange
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    NavigationLink(value: "cashBalance") {
+                        DashboardMetricCard(
+                            title: "Cash Balance",
+                            value: formattedCurrency(lastCashBalanceValue),
+                            systemImage: "banknote.fill",
+                            tint: .green
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    NavigationLink(value: "profit") {
+                        DashboardMetricCard(
+                            title: "Total Profit",
+                            value: formattedCurrency(lastProfitBalanceValue),
+                            systemImage: "chart.line.uptrend.xyaxis",
+                            tint: .purple
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("More")
+                        .font(.headline)
+
+                    VStack(spacing: 0) {
+                        Button { selectedTab = .transactions } label: {
+                            dashboardLinkLabel(
+                                title: "Transactions",
+                                detail: "\(transactionCount) transactions",
+                                systemImage: "arrow.left.arrow.right.circle.fill"
+                            )
+                        }
+                        .buttonStyle(.plain)
+
+                        Divider().padding(.leading, 44)
+
+                        NavigationLink(value: "soldCards") {
+                            dashboardLinkLabel(
+                                title: "Previously Owned Cards",
+                                detail: "\(soldCards.count) cards",
+                                systemImage: "archivebox.fill"
+                            )
+                        }
+
+                        Divider().padding(.leading, 44)
+
+                        NavigationLink(value: "cashFlow") {
+                            dashboardLinkLabel(
+                                title: "Other Cash Flow",
+                                detail: "\(cashFlowCount) entries",
+                                systemImage: "arrow.up.arrow.down.circle.fill"
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
+                    .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+                }
+
+                Button {
+                    showingDetailedInstructions = true
+                } label: {
+                    Label("Help & Instructions", systemImage: "questionmark.circle.fill")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+                .sheet(isPresented: $showingDetailedInstructions) {
+                    DetailedInstructionsView()
+                }
+            }
+            .padding()
+        }
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle("Overview")
+    }
+
+    private func dashboardLinkLabel(
+        title: LocalizedStringResource,
+        detail: String,
+        systemImage: String
+    ) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: systemImage)
+                .frame(width: 28)
+                .foregroundStyle(Color.michiganLightBlue)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .foregroundStyle(.primary)
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.vertical, 12)
+    }
+
+    private func formattedCurrency(_ value: NSDecimalNumber) -> String {
+        currencyFormatter(for: settings.defaultCurrency).string(from: value) ?? value.stringValue
+    }
+
+    @ViewBuilder
+    private func overviewDestination(for value: String) -> some View {
+        switch value {
+        case "cashBalance":
+            cashBalanceView.navigationTitle("Cash Balance")
+        case "profit":
+            profitView.navigationTitle("Profit")
+        case "soldCards":
+            soldCardsView.navigationTitle("Previously Owned")
+        case "cashFlow":
+            cashFlowView.navigationTitle("Other Cash Flow")
+        case "addCashFlow":
+            AddCashFlowView()
+        default:
+            Text("Unknown destination")
+        }
     }
     
     private func fetchCounts() {
@@ -468,57 +653,12 @@ extension ContentView {
     }
 
     private var availableCardsView: some View {
-        VStack(spacing: 0) {
-            // Search and Sort Controls
-            HStack(spacing: 12) {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    TextField("Search cards...", text: $searchText)
-                        .textFieldStyle(PlainTextFieldStyle())
-                    
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-                .padding(8)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                
-                // Sort By Menu
-                Menu {
-                    ForEach(SortOption.allCases, id: \.self) { option in
-                        Button(action: { sortOption = option }) {
-                            HStack {
-                                Text(option.rawValue)
-                                if sortOption == option {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text("Sort")
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
-                    .font(.caption)
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            
-            // Cards List
-            List {
-                ForEach(filteredAndSortedCards(cards: Array(availableCards))) { item in
+        List {
+            let cards = filteredAndSortedCards(cards: Array(availableCards))
+            if cards.isEmpty {
+                ListEmptyState(title: searchText.isEmpty ? "No Cards Yet" : "No Matching Cards", message: searchText.isEmpty ? "Add your first card to start tracking your collection." : "Try a different card name or clear the search.", systemImage: searchText.isEmpty ? "rectangle.stack.badge.plus" : "magnifyingglass")
+            } else {
+                ForEach(cards) { item in
                     NavigationLink {
                         ObservedCardView(card: item) { card in
                             cardDetailView(for: card)
@@ -538,17 +678,24 @@ extension ContentView {
                             cardRowLabel(for: card)
                         }
                     }
+                    .modernListRow()
                 }
             }
-            .listStyle(PlainListStyle())
         }
+        .modernListStyle()
+        .searchable(text: $searchText, prompt: "Search cards")
         .onAppear {
-                searchText = ""
-            }
+            searchText = ""
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Add Card") {
-                    path.append("addCard")
+                sortMenu
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    cardsPath.append("addCard")
+                } label: {
+                    Label("Add Card", systemImage: "plus")
                 }
             }
         }
@@ -556,19 +703,19 @@ extension ContentView {
     
     private var cashBalanceView: some View {
         List {
+            if cashBalances.isEmpty {
+                ListEmptyState(title: "No Balance History", message: "Balance snapshots will appear here as your cash changes.", systemImage: "banknote")
+            }
             ForEach(cashBalances) { item in
                 NavigationLink {
                     cashBalanceDetailView(for: item)
                 } label: {
-                    if let dateTime = item.dateTime {
-                        Text("Balance:").fontWeight(.bold) + Text("\(item.balance ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))") + Text(" on \(dateTime, style: .date)").font(.subheadline)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("Balance:").fontWeight(.bold) + Text("\(item.balance ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                    }
+                    cashBalanceRowLabel(for: item)
                 }
+                .modernListRow()
             }
         }
+        .modernListStyle()
         .onAppear {
             fetchCashBalances()
         }
@@ -586,35 +733,23 @@ extension ContentView {
     
     private var cashFlowView: some View {
         List {
+            if cashFlows.isEmpty {
+                ListEmptyState(title: "No Cash Flow Yet", message: "Record money in or out to see your history here.", systemImage: "arrow.up.arrow.down.circle")
+            }
             ForEach(cashFlows) { item in
                 NavigationLink {
                     cashFlowDetailView(for: item)
                 } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        if let dateTime = item.dateTime {
-                            Text("Change: ").fontWeight(.bold) + Text("\(item.change ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))") + Text(" on \(dateTime, style: .date)").font(.subheadline)
-                                .foregroundColor(.secondary)
-                            if let note = item.note, !note.isEmpty {
-                                Text("Description: \(note)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                        } else {
-                            Text("Change: ").fontWeight(.bold) + Text("\(item.change ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                            if let note = item.note, !note.isEmpty {
-                                Text("Description: \(note)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
+                    cashFlowRowLabel(for: item)
                 }
+                .modernListRow()
             }
         }
+        .modernListStyle()
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Add Cash Flow") {
-                    path.append("addCashFlow")
+                    overviewPath.append("addCashFlow")
                 }
             }
         }
@@ -634,57 +769,12 @@ extension ContentView {
     }
     
     private var soldCardsView: some View {
-        VStack(spacing: 0) {
-            // Search and Sort Controls
-            HStack(spacing: 12) {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    TextField("Search cards...", text: $searchText)
-                        .textFieldStyle(PlainTextFieldStyle())
-                    
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-                .padding(8)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                
-                // Sort By Menu
-                Menu {
-                    ForEach(SortOption.allCases, id: \.self) { option in
-                        Button(action: { sortOption = option }) {
-                            HStack {
-                                Text(option.rawValue)
-                                if sortOption == option {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text("Sort")
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
-                    .font(.caption)
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            
-            // Cards List
-            List {
-                ForEach(filteredAndSortedCards(cards: Array(soldCards))) { item in
+        List {
+            let cards = filteredAndSortedCards(cards: Array(soldCards))
+            if cards.isEmpty {
+                ListEmptyState(title: searchText.isEmpty ? "No Sold Cards" : "No Matching Cards", message: searchText.isEmpty ? "Cards you sell will be collected here." : "Try a different card name or clear the search.", systemImage: searchText.isEmpty ? "checkmark.seal" : "magnifyingglass")
+            } else {
+                ForEach(cards) { item in
                     NavigationLink {
                         ObservedCardView(card: item) { card in
                             soldCardDetailView(for: card)
@@ -704,30 +794,37 @@ extension ContentView {
                             cardRowLabel(for: card)
                         }
                     }
+                    .modernListRow()
                 }
             }
-            .listStyle(PlainListStyle())
         }
-        .onAppear{
+        .modernListStyle()
+        .searchable(text: $searchText, prompt: "Search sold cards")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                sortMenu
+            }
+        }
+        .onAppear {
             searchText = ""
         }
     }
     
     private var profitView: some View {
         List {
+            if profits.isEmpty {
+                ListEmptyState(title: "No Profit History", message: "Profit snapshots will appear after your transactions are recorded.", systemImage: "chart.line.uptrend.xyaxis")
+            }
             ForEach(profits) { item in
                 NavigationLink {
                     profitDetailView(for: item)
                 } label: {
-                    if let dateTime = item.timestamp {
-                        Text("Total:").fontWeight(.bold) + Text(" \(item.total ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))") + Text(" on \(dateTime, style: .date)").font(.subheadline)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("Total:").fontWeight(.bold) + Text(" \(item.total ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                    }
+                    profitRowLabel(for: item)
                 }
+                .modernListRow()
             }
         }
+        .modernListStyle()
         .onAppear {
             fetchProfits()
         }
@@ -745,6 +842,9 @@ extension ContentView {
     
     private var transactionsView: some View {
         List {
+            if transactions.isEmpty {
+                ListEmptyState(title: "No Transactions Yet", message: "Add a purchase, sale, or trade to start your history.", systemImage: "arrow.left.arrow.right.circle")
+            }
             ForEach(transactions) { item in
                 NavigationLink {
                     transactionDetailView(for: item)
@@ -761,12 +861,14 @@ extension ContentView {
                 } label: {
                     transactionRowLabel(for: item)
                 }
+                .modernListRow()
             }
         }
+        .modernListStyle()
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Add Transaction") {
-                    path.append("addTransaction")
+                    transactionsPath.append("addTransaction")
                 }
             }
         }
@@ -1022,16 +1124,39 @@ extension ContentView {
 @available(iOS 16.0, *)
 extension ContentView {
     
+    private var sortMenu: some View {
+        Menu {
+            ForEach(SortOption.allCases, id: \.self) { option in
+                Button {
+                    sortOption = option
+                } label: {
+                    if sortOption == option {
+                        Label(option.rawValue, systemImage: "checkmark")
+                    } else {
+                        Text(option.rawValue)
+                    }
+                }
+            }
+        } label: {
+            Label("Sort", systemImage: "arrow.up.arrow.down")
+        }
+    }
+
     private func cardRowLabel(for item: Card) -> some View {
         HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(item.title ?? "Unknown Card")
-                    .font(.headline)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
                 if let currentValue = item.currentValue {
-                    Text("Current value:") + Text(" \(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    Text(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.tint)
                 }
+                Text(item.available ? "Available" : "Sold")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(item.available ? Color.green : Color.secondary)
             }
             Spacer(minLength: 8)
             StoredPhotoThumbnail(
@@ -1043,24 +1168,27 @@ extension ContentView {
     
     private func transactionRowLabel(for item: Transaction) -> some View {
         HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 7) {
                 if let dateTime = item.dateTime {
-                    Text("Trade on").fontWeight(.bold) + Text(" \(dateTime, style: .date)")
+                    Text(dateTime, style: .date)
+                        .font(.headline.weight(.semibold))
                 }
                 if let platformId = item.platformId, !platformId.isEmpty {
-                    Text("With: \(platformId)")
+                    Label(platformId, systemImage: "person.crop.circle")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
                 if let cardsIn = item.cardsIn, !cardsIn.isEmpty {
-                    Text("Cards traded in: \(cardsIn)")
+                    Label(cardsIn, systemImage: "arrow.down.left")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
                 if let cardsOut = item.cardsOut, !cardsOut.isEmpty {
-                    Text("Cards traded out: \(cardsOut)")
+                    Label(cardsOut, systemImage: "arrow.up.right")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
             }
             Spacer(minLength: 8)
@@ -1068,6 +1196,74 @@ extension ContentView {
                 assetIdentifier: item.photoAssetIdentifier,
                 legacyData: item.photoData
             )
+        }
+    }
+
+    private func cashBalanceRowLabel(for item: CashBalance) -> some View {
+        return HStack(spacing: 14) {
+            Image(systemName: "banknote.fill")
+                .font(.title3)
+                .foregroundStyle(.green)
+                .frame(width: 44, height: 44)
+                .background(Color.green.opacity(0.12), in: Circle())
+            VStack(alignment: .leading, spacing: 5) {
+                Text(item.balance ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))
+                    .font(.title3.weight(.bold))
+                if let dateTime = item.dateTime {
+                    Text(dateTime, style: .date)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    private func cashFlowRowLabel(for item: CashFlow) -> some View {
+        let change = item.change ?? NSDecimalNumber.zero
+        let isPositive = change.compare(NSDecimalNumber.zero) != .orderedAscending
+        return HStack(spacing: 14) {
+            Image(systemName: isPositive ? "arrow.down.left" : "arrow.up.right")
+                .font(.headline)
+                .foregroundStyle(isPositive ? Color.green : Color.red)
+                .frame(width: 44, height: 44)
+                .background((isPositive ? Color.green : Color.red).opacity(0.12), in: Circle())
+            VStack(alignment: .leading, spacing: 5) {
+                Text(change, formatter: currencyFormatter(for: settings.defaultCurrency))
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(isPositive ? Color.green : Color.red)
+                if let note = item.note, !note.isEmpty {
+                    Text(note).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                }
+                if let dateTime = item.dateTime {
+                    Text(dateTime, style: .date).font(.caption).foregroundStyle(.tertiary)
+                }
+            }
+        }
+    }
+
+    private func profitRowLabel(for item: Profit) -> some View {
+        let change = item.change ?? NSDecimalNumber.zero
+        let comparison = change.compare(NSDecimalNumber.zero)
+        let changeColor: Color = comparison == .orderedDescending ? .green : comparison == .orderedAscending ? .red : .secondary
+        let formattedChange = currencyFormatter(for: settings.defaultCurrency).string(from: change) ?? change.stringValue
+        let signedChange = comparison == .orderedDescending ? "+\(formattedChange)" : formattedChange
+
+        return HStack(spacing: 14) {
+            Image(systemName: "chart.line.uptrend.xyaxis")
+                .font(.headline)
+                .foregroundStyle(.blue)
+                .frame(width: 44, height: 44)
+                .background(Color.blue.opacity(0.12), in: Circle())
+            VStack(alignment: .leading, spacing: 5) {
+                Text(item.total ?? NSDecimalNumber.zero, formatter: currencyFormatter(for: settings.defaultCurrency))
+                    .font(.title3.weight(.bold))
+                Text("Change: \(signedChange)")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(changeColor)
+                if let timestamp = item.timestamp {
+                    Text(timestamp, style: .date).font(.subheadline).foregroundStyle(.secondary)
+                }
+            }
         }
     }
 }
