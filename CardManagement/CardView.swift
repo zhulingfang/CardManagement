@@ -41,6 +41,11 @@ struct EditCardView: View {
     @State private var showPhotoLibrary = false
     @State private var showPhotoPermissionAlert = false
     @State private var showCameraPermissionAlert = false
+    @State private var photoAssetIdentifier: String?
+    @State private var pendingPhotoData: Data?
+    @State private var photoChanged = false
+    @State private var photoErrorMessage = ""
+    @State private var showPhotoErrorAlert = false
     
     init(selectedCard:Card) {
         self.selectedCard = selectedCard
@@ -89,6 +94,9 @@ struct EditCardView: View {
                         Button("Remove Photo") {
                             self.cardImage = nil
                             selectedPhoto = nil
+                            photoAssetIdentifier = nil
+                            pendingPhotoData = nil
+                            photoChanged = true
                         }
                         .foregroundColor(.red)
                     }
@@ -172,7 +180,7 @@ struct EditCardView: View {
                 
                 Spacer()
                 
-                Button(action: { updateCard() }) {
+                Button(action: { Task { await updateCard() } }) {
                     Text("Save")
                 }
                 .foregroundColor(.blue)
@@ -184,7 +192,7 @@ struct EditCardView: View {
         .navigationTitle("Edit")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            loadPhotoData()
+            Task { await loadPhoto() }
         }
         .onChange(of: selectedPhoto) { _, newValue in
             Task {
@@ -197,6 +205,9 @@ struct EditCardView: View {
             CameraView { image in
                 if let resizedImage = image.resizedToMaxDimension(800) {
                     cardImage = resizedImage
+                    pendingPhotoData = image.jpegData(compressionQuality: 0.9)
+                    photoAssetIdentifier = nil
+                    photoChanged = true
                 }
                 showCamera = false
             }
@@ -223,19 +234,34 @@ struct EditCardView: View {
         } message: {
             Text("Please enable camera access in Settings to take photos.")
         }
+        .alert("Photo Unavailable", isPresented: $showPhotoErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(photoErrorMessage)
+        }
         .interactiveDismissDisabled(true)
     }
     
-    private func loadPhotoData() {
-        // This triggers the fault and loads the photoData from Core Data
-        // Access the property to force it to load from the database
+    private func loadPhoto() async {
+        photoAssetIdentifier = selectedCard.photoAssetIdentifier
+        if let identifier = selectedCard.photoAssetIdentifier {
+            do {
+                cardImage = try await PhotoLibraryStore.image(for: identifier)
+                return
+            } catch {
+                photoErrorMessage = error.localizedDescription
+                showPhotoErrorAlert = true
+            }
+        }
         if let imageData = selectedCard.photoData {
             cardImage = UIImage(data: imageData)
         }
     }
     
-    private func updateCard() {
-        withAnimation {
+    private func updateCard() async {
+        do {
+            let savedIdentifier = try await resolvedPhotoIdentifier()
+            withAnimation {
             // Use guard for better error handling and early return
             guard let cardToUpdate = existingCards.first else {
                 print("No card found to update")
@@ -311,10 +337,8 @@ struct EditCardView: View {
                 cardToUpdate.dateSold = dateSold
             }
             
-            // Update card image
-            if let image = cardImage {
-                cardToUpdate.photoData = image.jpegData(compressionQuality: 0.03)
-            } else {
+            if photoChanged || cardToUpdate.photoAssetIdentifier == nil {
+                cardToUpdate.photoAssetIdentifier = savedIdentifier
                 cardToUpdate.photoData = nil
             }
             
@@ -327,6 +351,19 @@ struct EditCardView: View {
                 print("Failed to update card: \(nsError), \(nsError.userInfo)")
             }
         }
+        } catch {
+            photoErrorMessage = error.localizedDescription
+            showPhotoErrorAlert = true
+        }
+    }
+
+    private func resolvedPhotoIdentifier() async throws -> String? {
+        guard cardImage != nil else { return nil }
+        if let photoAssetIdentifier { return photoAssetIdentifier }
+        if let data = pendingPhotoData ?? selectedCard.photoData {
+            return try await PhotoLibraryStore.saveImageData(data)
+        }
+        return nil
     }
     private func loadSelectedPhoto() async {
         guard let selectedPhoto = selectedPhoto else { return }
@@ -335,6 +372,9 @@ struct EditCardView: View {
             if let data = try await selectedPhoto.loadTransferable(type: Data.self),
                let image = UIImage(data: data) {
                 cardImage = image.resizedToMaxDimension(800)
+                pendingPhotoData = data
+                photoAssetIdentifier = selectedPhoto.itemIdentifier
+                photoChanged = true
             }
         } catch {
             print("Failed to load image: \(error)")
@@ -383,6 +423,10 @@ struct AddItemView: View {
     @State private var showPhotoLibrary = false
     @State private var showPhotoPermissionAlert = false
     @State private var showCameraPermissionAlert = false
+    @State private var photoAssetIdentifier: String?
+    @State private var pendingPhotoData: Data?
+    @State private var photoErrorMessage = ""
+    @State private var showPhotoErrorAlert = false
     
     // Custom decimal formatter for better display
     private var decimalFormatter: NumberFormatter {
@@ -443,6 +487,8 @@ struct AddItemView: View {
                         Button("Remove Photo") {
                             self.cardImage = nil
                             selectedPhoto = nil
+                            photoAssetIdentifier = nil
+                            pendingPhotoData = nil
                         }
                         .foregroundColor(.red)
                     }
@@ -485,7 +531,7 @@ struct AddItemView: View {
             .padding(2)
             .navigationTitle(Text("Add a new Card"))
             
-            Button(action: { addCard() }) {
+            Button(action: { Task { await addCard() } }) {
                 Text("Save")
             }
             .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -501,6 +547,8 @@ struct AddItemView: View {
             CameraView { image in
                 if let resizedImage = image.resizedToMaxDimension(800) {
                     cardImage = resizedImage
+                    pendingPhotoData = image.jpegData(compressionQuality: 0.9)
+                    photoAssetIdentifier = nil
                 }
                 showCamera = false
             }
@@ -526,6 +574,11 @@ struct AddItemView: View {
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("Please enable camera access in Settings to take photos.")
+        }
+        .alert("Photo Error", isPresented: $showPhotoErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(photoErrorMessage)
         }
     }
     
@@ -556,6 +609,8 @@ struct AddItemView: View {
                let image = UIImage(data: data) {
                 // Resize image to max 800px dimension to save space
                 cardImage = image.resizedToMaxDimension(800)
+                pendingPhotoData = data
+                photoAssetIdentifier = selectedPhoto.itemIdentifier
             }
         } catch {
             print("Failed to load image: \(error)")
@@ -584,14 +639,24 @@ struct AddItemView: View {
         )
     }
     
-    private func addCard() {
+    private func addCard() async {
         // Validate required fields
         guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             print("Title is required")
             return
         }
         
-        withAnimation {
+        do {
+            let savedIdentifier: String?
+            if let photoAssetIdentifier {
+                savedIdentifier = photoAssetIdentifier
+            } else if let pendingPhotoData {
+                savedIdentifier = try await PhotoLibraryStore.saveImageData(pendingPhotoData)
+            } else {
+                savedIdentifier = nil
+            }
+
+            withAnimation {
             let newCard = Card(context: viewContext)
             newCard.id = UUID()
             newCard.timestamp = Date()
@@ -631,11 +696,7 @@ struct AddItemView: View {
             let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
             newCard.note = trimmedNote.isEmpty ? nil : trimmedNote
             
-            // Save photo if available
-            if let cardImage = cardImage,
-               let imageData = cardImage.jpegData(compressionQuality: 0.03) {
-                newCard.photoData = imageData
-            }
+            newCard.photoAssetIdentifier = savedIdentifier
             do {
                 try viewContext.save()
                 dismiss()
@@ -644,6 +705,10 @@ struct AddItemView: View {
                 let nsError = error as NSError
                 print("Failed to save card: \(nsError), \(nsError.userInfo)")
             }
+        }
+        } catch {
+            photoErrorMessage = error.localizedDescription
+            showPhotoErrorAlert = true
         }
     }
 }

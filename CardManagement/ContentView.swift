@@ -10,6 +10,115 @@ private struct ObservedCardView<Content: View>: View {
     }
 }
 
+private struct StoredPhotoThumbnail: View {
+    let assetIdentifier: String?
+    let legacyData: Data?
+
+    @State private var image: UIImage?
+
+    var body: some View {
+        if assetIdentifier != nil || legacyData != nil {
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(.secondarySystemFill))
+
+                if let image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            }
+            .frame(width: 64, height: 64)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .accessibilityLabel("Attached photo")
+            .task(id: photoLoadIdentifier) {
+                await loadImage()
+            }
+        }
+    }
+
+    private var photoLoadIdentifier: String {
+        assetIdentifier ?? "legacy-\(legacyData?.count ?? 0)"
+    }
+
+    private func loadImage() async {
+        if let assetIdentifier {
+            image = try? await PhotoLibraryStore.image(for: assetIdentifier)
+        } else if let legacyData {
+            image = UIImage(data: legacyData)
+        } else {
+            image = nil
+        }
+    }
+}
+
+private struct StoredPhotoDetailView: View {
+    let title: LocalizedStringResource
+    let assetIdentifier: String?
+    let legacyData: Data?
+
+    @State private var image: UIImage?
+    @State private var errorMessage: String?
+
+    var body: some View {
+        if assetIdentifier != nil || legacyData != nil {
+            Group {
+                if let image {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(title)
+                            .fontWeight(.bold)
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 240)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .accessibilityLabel(title)
+                    }
+                    .padding(.vertical, 8)
+                } else if let errorMessage {
+                    Label(errorMessage, systemImage: "photo.badge.exclamationmark")
+                        .foregroundStyle(.secondary)
+                } else {
+                    HStack {
+                        Spacer()
+                        ProgressView("Loading photo…")
+                        Spacer()
+                    }
+                    .padding(.vertical)
+                }
+            }
+            .task(id: photoLoadIdentifier) {
+                await loadImage()
+            }
+        }
+    }
+
+    private var photoLoadIdentifier: String {
+        assetIdentifier ?? "legacy-\(legacyData?.count ?? 0)"
+    }
+
+    private func loadImage() async {
+        errorMessage = nil
+        if let assetIdentifier {
+            do {
+                image = try await PhotoLibraryStore.image(for: assetIdentifier)
+            } catch {
+                image = legacyData.flatMap(UIImage.init(data:))
+                if image == nil {
+                    errorMessage = error.localizedDescription
+                }
+            }
+        } else if let legacyData {
+            image = UIImage(data: legacyData)
+        } else {
+            image = nil
+        }
+    }
+}
+
 extension Color {
     static let michiganBlue = Color(red: 0/255, green: 39/255, blue: 76/255)
     static let michiganLightBlue = Color(red: 0/255, green: 60/255, blue: 116/255)
@@ -669,11 +778,11 @@ extension ContentView {
         let fetchRequest = NSFetchRequest<Transaction>(entityName: "Transaction")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.dateTime, ascending: false)]
         
-        // Exclude photoData - list all Transaction properties EXCEPT photoData
+        // Keep image bytes deferred while fetching the lightweight photo reference.
         fetchRequest.propertiesToFetch = [
             "pk", "dateTime", "platform", "cashIn", "cashOut",
-            "cardsIn", "cardsOut", "profit", "feesAndShipping", "platformId"
-            // Add any other Transaction properties you have, but NOT "photoData"
+            "cardsIn", "cardsOut", "profit", "feesAndShipping", "platformId",
+            "photoAssetIdentifier"
         ]
         
         do {
@@ -697,25 +806,6 @@ extension ContentView {
             Text("Description:").fontWeight(.bold) + Text(" \(item.note ?? "No description")")
             Text("Available:").fontWeight(.bold) + Text(" \(item.available ? "Yes" : "No")")
             
-            // Photo Section with Full-Screen View
-            if let photoData = item.photoData,
-               let image = UIImage(data: photoData) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Card Photo:")
-                        .fontWeight(.bold)
-                    
-                    ZoomableImageView(image: image)
-                        .frame(height: 400)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                    
-                    Text("Pinch to zoom, drag to pan, double tap to reset")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.vertical, 8)
-            }
-            
             if let currentValue = item.currentValue {
                 Text("Current value:").fontWeight(.bold) + Text(" \(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
             }
@@ -737,6 +827,11 @@ extension ContentView {
             if let dateSold = item.dateSold {
                 Text("Sold on:").fontWeight(.bold) + Text(" \(dateSold, style: .date)")
             }
+            StoredPhotoDetailView(
+                title: "Card Photo",
+                assetIdentifier: item.photoAssetIdentifier,
+                legacyData: item.photoData
+            )
         }
         .navigationTitle(item.title ?? "Card Details")
         .navigationBarTitleDisplayMode(.inline)
@@ -746,24 +841,6 @@ extension ContentView {
         List {
             Text("Description:").fontWeight(.bold) + Text(" \(item.note ?? "No description")")
             Text("Available:").fontWeight(.bold) + Text(" \(item.available ? "Yes" : "No")")
-            // Photo Section with Full-Screen View
-            if let photoData = item.photoData,
-               let image = UIImage(data: photoData) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Card Photo:")
-                        .fontWeight(.bold)
-                    
-                    ZoomableImageView(image: image)
-                        .frame(height: 400)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                    
-                    Text("Pinch to zoom, drag to pan, double tap to reset")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.vertical, 8)
-            }
             if let currentValue = item.currentValue {
                 Text("Current value:").fontWeight(.bold) + Text(" \(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
             }
@@ -785,6 +862,11 @@ extension ContentView {
             if let dateSold = item.dateSold {
                 Text("Sold on:").fontWeight(.bold) + Text(" \(dateSold, style: .date)")
             }
+            StoredPhotoDetailView(
+                title: "Card Photo",
+                assetIdentifier: item.photoAssetIdentifier,
+                legacyData: item.photoData
+            )
         }
         .navigationTitle(item.title ?? "Sold Card Details")
         .navigationBarTitleDisplayMode(.inline)
@@ -849,25 +931,6 @@ extension ContentView {
                 Text("Platform ID:").fontWeight(.bold) + Text(" \(platformId)")
             }
             
-            // Photo Section
-            if let photoData = item.photoData,
-               let image = UIImage(data: photoData) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Transaction Photo:")
-                        .fontWeight(.bold)
-                    
-                    ZoomableImageView(image: image)
-                        .frame(height: 400)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                    
-                    Text("Pinch to zoom, drag to pan, double tap to reset")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.vertical, 8)
-            }
-            
             if let cardsIn = item.cardsIn, !cardsIn.isEmpty {
                 Text("Cards traded in:").fontWeight(.bold) + Text(" \(cardsIn)")
             }
@@ -891,6 +954,11 @@ extension ContentView {
             if let profit = item.profit {
                 Text("Profit:").fontWeight(.bold) + Text(" \(profit, formatter: currencyFormatter(for: settings.defaultCurrency))")
             }
+            StoredPhotoDetailView(
+                title: "Transaction Photo",
+                assetIdentifier: item.photoAssetIdentifier,
+                legacyData: item.photoData
+            )
         }
         .navigationTitle("Transaction Details")
         .navigationBarTitleDisplayMode(.inline)
@@ -955,38 +1023,51 @@ extension ContentView {
 extension ContentView {
     
     private func cardRowLabel(for item: Card) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(item.title ?? "Unknown Card")
-                .font(.headline)
-            if let currentValue = item.currentValue {
-                Text("Current value:") + Text(" \(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(item.title ?? "Unknown Card")
+                    .font(.headline)
+                if let currentValue = item.currentValue {
+                    Text("Current value:") + Text(" \(currentValue, formatter: currencyFormatter(for: settings.defaultCurrency))")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
+            Spacer(minLength: 8)
+            StoredPhotoThumbnail(
+                assetIdentifier: item.photoAssetIdentifier,
+                legacyData: item.photoData
+            )
         }
     }
     
     private func transactionRowLabel(for item: Transaction) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let dateTime = item.dateTime {
-                Text("Trade on").fontWeight(.bold) + Text(" \(dateTime, style: .date)")
-                    //.font(.headline)
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                if let dateTime = item.dateTime {
+                    Text("Trade on").fontWeight(.bold) + Text(" \(dateTime, style: .date)")
+                }
+                if let platformId = item.platformId, !platformId.isEmpty {
+                    Text("With: \(platformId)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                if let cardsIn = item.cardsIn, !cardsIn.isEmpty {
+                    Text("Cards traded in: \(cardsIn)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                if let cardsOut = item.cardsOut, !cardsOut.isEmpty {
+                    Text("Cards traded out: \(cardsOut)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
-            if let platformId = item.platformId, !platformId.isEmpty {
-                Text("With: \(platformId)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            if let cardsIn = item.cardsIn, !cardsIn.isEmpty {
-                Text("Cards traded in: \(cardsIn)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            if let cardsOut = item.cardsOut, !cardsOut.isEmpty {
-                Text("Cards traded out: \(cardsOut)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
+            Spacer(minLength: 8)
+            StoredPhotoThumbnail(
+                assetIdentifier: item.photoAssetIdentifier,
+                legacyData: item.photoData
+            )
         }
     }
 }

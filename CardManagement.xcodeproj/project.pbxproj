@@ -49,6 +49,7 @@
 		F60C07652E54EF57004CAB79 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		F60C07672E5507E9004CAB79 /* CardManagement 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 14.xcdatamodel"; sourceTree = "<group>"; };
 		F60C07682E909D30004CAB79 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F62CDEB03060D11F00AC186C /* CardManagement 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CardManagement 15.xcdatamodel"; sourceTree = "<group>"; };
 		F630BF862E4977A90013F0BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F630BF872E497C5E0013F0BF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F630BF892E4983E80013F0BF /* CardManagement.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardManagement.xctestplan; sourceTree = "<group>"; };
@@ -500,7 +501,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = CardManagement;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Use camera to capture photo of the cards in the Card and the Trasaction";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select transaction photos";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Card Management saves card and transaction photos to your Photo Library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Card Management needs access to display photos linked to your cards and transactions.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -512,7 +514,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8;
+				MARKETING_VERSION = 9;
 				PRODUCT_BUNDLE_IDENTIFIER = zhulingfang.CardManagement;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -532,13 +534,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CardManagement/Preview Content\"";
+				DEVELOPMENT_TEAM = YYZ8T8M94P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CardManagement/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CardManagement;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Use camera to capture photo of the cards in the Card and the Trasaction";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select transaction photos";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Card Management saves card and transaction photos to your Photo Library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Card Management needs access to display photos linked to your cards and transactions.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -550,7 +554,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8;
+				MARKETING_VERSION = 9;
 				PRODUCT_BUNDLE_IDENTIFIER = zhulingfang.CardManagement;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -697,8 +701,9 @@
 				F677D1AD2E42A5AC00A38441 /* 3.xcdatamodel */,
 				F677D1AC2E4190CE00A38441 /* 2.xcdatamodel */,
 				F67ADB032E385AD600184D15 /* CardManagement.xcdatamodel */,
+				F62CDEB03060D11F00AC186C /* CardManagement 15.xcdatamodel */,
 			);
-			currentVersion = F67ADB032E385AD600184D15 /* CardManagement.xcdatamodel */;
+			currentVersion = F62CDEB03060D11F00AC186C /* CardManagement 15.xcdatamodel */;
 			path = CardManagement.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

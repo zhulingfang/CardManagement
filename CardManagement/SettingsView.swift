@@ -87,7 +87,7 @@ struct SettingsView: View {
             Section(header: Text("Backup & Restore")) {
                 Button(action: {
                     includePhotosInBackup = true
-                    createBackup(includePhotos: true)
+                    Task { await createBackup(includePhotos: true) }
                 }) {
                     HStack {
                         Image(systemName: "square.and.arrow.up")
@@ -97,7 +97,7 @@ struct SettingsView: View {
                 
                 Button(action: {
                     includePhotosInBackup = false
-                    createBackup(includePhotos: false)
+                    Task { await createBackup(includePhotos: false) }
                 }) {
                     HStack {
                         Image(systemName: "square.and.arrow.up.fill")
@@ -128,7 +128,7 @@ struct SettingsView: View {
                 HStack {
                     Text("Version")
                     Spacer()
-                    Text("2.0.4")
+                    Text("3.0.1")
                         .foregroundColor(.secondary)
                 }
             }
@@ -161,7 +161,7 @@ struct SettingsView: View {
             switch result {
             case .success(let urls):
                 guard let url = urls.first else { return }
-                restoreFromBackup(url: url)
+                Task { await restoreFromBackup(url: url) }
             case .failure(let error):
                 backupAlertMessage = "Failed to import backup: \(error.localizedDescription)"
                 showingBackupAlert = true
@@ -206,7 +206,7 @@ struct SettingsView: View {
         return "\(appName)\(photoSuffix)-\(dateString).json"
     }
     
-    private func createBackup(includePhotos: Bool) {
+    private func createBackup(includePhotos: Bool) async {
         var backupData: [String: Any] = [:]
         var skippedItems: [String: Int] = [:]
         
@@ -228,13 +228,24 @@ struct SettingsView: View {
                 var cardDict: [String: Any] = [:]
                 for attribute in card.entity.attributesByName.keys {
                     // Skip photoData if not including photos
-                    if attribute == "photoData" && !includePhotos {
+                    if !includePhotos && (attribute == "photoData" || attribute == "photoAssetIdentifier") {
                         continue
                     }
                     if let value = card.value(forKey: attribute) {
                         if let serialized = convertToSerializable(value) {
                             cardDict[attribute] = serialized
                         }
+                    }
+                }
+
+                if includePhotos,
+                   cardDict["photoData"] == nil,
+                   let identifier = card.value(forKey: "photoAssetIdentifier") as? String {
+                    do {
+                        let data = try await PhotoLibraryStore.imageData(for: identifier)
+                        cardDict["photoBackupData"] = data.base64EncodedString()
+                    } catch {
+                        skippedItems["photos", default: 0] += 1
                     }
                 }
                 
@@ -262,10 +273,24 @@ struct SettingsView: View {
             for transaction in transactions {
                 var transactionDict: [String: Any] = [:]
                 for attribute in transaction.entity.attributesByName.keys {
+                    if !includePhotos && (attribute == "photoData" || attribute == "photoAssetIdentifier") {
+                        continue
+                    }
                     if let value = transaction.value(forKey: attribute) {
                         if let serialized = convertToSerializable(value) {
                             transactionDict[attribute] = serialized
                         }
+                    }
+                }
+
+                if includePhotos,
+                   transactionDict["photoData"] == nil,
+                   let identifier = transaction.value(forKey: "photoAssetIdentifier") as? String {
+                    do {
+                        let data = try await PhotoLibraryStore.imageData(for: identifier)
+                        transactionDict["photoBackupData"] = data.base64EncodedString()
+                    } catch {
+                        skippedItems["photos", default: 0] += 1
                     }
                 }
                 
@@ -372,7 +397,7 @@ struct SettingsView: View {
         
         // Add metadata
         backupData["metadata"] = [
-            "version": "2.0.3",
+            "version": "2.1.0",
             "exportDate": ISO8601DateFormatter().string(from: Date()),
             "deviceName": UIDevice.current.name,
             "includesPhotos": includePhotos
@@ -455,7 +480,7 @@ struct SettingsView: View {
         return nil
     }
     
-    private func restoreFromBackup(url: URL) {
+    private func restoreFromBackup(url: URL) async {
         guard url.startAccessingSecurityScopedResource() else {
             backupAlertMessage = "Unable to access the selected file"
             showingBackupAlert = true
@@ -494,9 +519,10 @@ struct SettingsView: View {
             if let cardsArray = json["cards"] as? [[String: Any]] {
                 for cardDict in cardsArray {
                     let card = NSEntityDescription.insertNewObject(forEntityName: "Card", into: viewContext)
-                    for (key, value) in cardDict {
+                    for (key, value) in cardDict where key != "photoBackupData" {
                         setValue(value, forKey: key, on: card)
                     }
+                    await restoreReferencedPhoto(from: cardDict, on: card)
                 }
             }
             
@@ -504,9 +530,10 @@ struct SettingsView: View {
             if let transactionsArray = json["transactions"] as? [[String: Any]] {
                 for transactionDict in transactionsArray {
                     let transaction = NSEntityDescription.insertNewObject(forEntityName: "Transaction", into: viewContext)
-                    for (key, value) in transactionDict {
+                    for (key, value) in transactionDict where key != "photoBackupData" {
                         setValue(value, forKey: key, on: transaction)
                     }
+                    await restoreReferencedPhoto(from: transactionDict, on: transaction)
                 }
             }
             
@@ -612,6 +639,23 @@ struct SettingsView: View {
             }
         default:
             object.setValue(value, forKey: key)
+        }
+    }
+
+    private func restoreReferencedPhoto(from dictionary: [String: Any], on object: NSManagedObject) async {
+        guard let base64String = dictionary["photoBackupData"] as? String,
+              let data = Data(base64Encoded: base64String) else {
+            return
+        }
+
+        do {
+            let identifier = try await PhotoLibraryStore.saveImageData(data)
+            object.setValue(identifier, forKey: "photoAssetIdentifier")
+            object.setValue(nil, forKey: "photoData")
+        } catch {
+            // Preserve the image inside Core Data when Photos access is unavailable.
+            object.setValue(nil, forKey: "photoAssetIdentifier")
+            object.setValue(data, forKey: "photoData")
         }
     }
 }

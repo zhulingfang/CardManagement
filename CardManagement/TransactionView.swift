@@ -109,6 +109,11 @@ struct EditTransactionView: View {
     @State private var showPhotoLibrary = false
     @State private var showPhotoPermissionAlert = false
     @State private var showCameraPermissionAlert = false
+    @State private var photoAssetIdentifier: String?
+    @State private var pendingPhotoData: Data?
+    @State private var photoChanged = false
+    @State private var photoErrorMessage = ""
+    @State private var showPhotoErrorAlert = false
     
     var body: some View {
         VStack{
@@ -135,6 +140,9 @@ struct EditTransactionView: View {
                         Button("Remove Photo") {
                             self.transactionImage = nil
                             selectedPhoto = nil
+                            photoAssetIdentifier = nil
+                            pendingPhotoData = nil
+                            photoChanged = true
                         }
                         .foregroundColor(.red)
                     }
@@ -211,7 +219,7 @@ struct EditTransactionView: View {
                 }.foregroundColor(.red)
                     .buttonStyle(BorderlessButtonStyle())
                 Spacer()
-                Button(action: {updateTransaction()}) {
+                Button(action: { Task { await updateTransaction() } }) {
                     Text("Save")
                 }.foregroundColor(.blue)
                     .buttonStyle(BorderlessButtonStyle())
@@ -220,7 +228,7 @@ struct EditTransactionView: View {
             .background(Color(UIColor.systemBackground))
             .shadow(color: .gray.opacity(0.2), radius: 1, x: 0, y: -1)
         }.onAppear{
-            loadPhotoData()
+            Task { await loadPhoto() }
             tradeInCards = getCardsFromTitleString(selectedTransaction.cardsIn!, from: existingCards)
             tradeOutCards = getCardsFromTitleString(selectedTransaction.cardsOut!, from: existingCards)
             oldTradeOutList = tradeOutCards
@@ -236,6 +244,9 @@ struct EditTransactionView: View {
             CameraView { image in
                 if let resizedImage = image.resizedToMaxDimension(800) {
                     transactionImage = resizedImage
+                    pendingPhotoData = image.jpegData(compressionQuality: 0.9)
+                    photoAssetIdentifier = nil
+                    photoChanged = true
                 }
                 showCamera = false
             }
@@ -260,11 +271,24 @@ struct EditTransactionView: View {
         } message: {
             Text("Please enable camera access in Settings to take photos.")
         }
+        .alert("Photo Unavailable", isPresented: $showPhotoErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(photoErrorMessage)
+        }
     }
     
-    private func loadPhotoData() {
-        // This triggers the fault and loads the photoData from Core Data
-        // Access the property to force it to load from the database
+    private func loadPhoto() async {
+        photoAssetIdentifier = selectedTransaction.photoAssetIdentifier
+        if let identifier = selectedTransaction.photoAssetIdentifier {
+            do {
+                transactionImage = try await PhotoLibraryStore.image(for: identifier)
+                return
+            } catch {
+                photoErrorMessage = error.localizedDescription
+                showPhotoErrorAlert = true
+            }
+        }
         if let imageData = selectedTransaction.photoData {
             transactionImage = UIImage(data: imageData)
         }
@@ -278,6 +302,9 @@ struct EditTransactionView: View {
                let image = UIImage(data: data) {
                 // Resize image to max 800px dimension to save space
                 transactionImage = image.resizedToMaxDimension(800)
+                pendingPhotoData = data
+                photoAssetIdentifier = selectedPhoto.itemIdentifier
+                photoChanged = true
             }
         } catch {
             print("Failed to load image: \(error)")
@@ -305,8 +332,10 @@ struct EditTransactionView: View {
         )
     }
     
-    private func updateTransaction() {
-        withAnimation {
+    private func updateTransaction() async {
+        do {
+            let savedIdentifier = try await resolvedPhotoIdentifier()
+            withAnimation {
             // Get the existing transaction
             guard let existingItem = existingTransaction.first else { return }
             
@@ -380,10 +409,8 @@ struct EditTransactionView: View {
             let profitChanged = profitValue - oldProfit
             existingItem.profit = profitValue as NSDecimalNumber
             
-            // Update transaction image
-            if let image = transactionImage {
-                existingItem.photoData = image.jpegData(compressionQuality: 0.03)
-            } else {
+            if photoChanged || existingItem.photoAssetIdentifier == nil {
+                existingItem.photoAssetIdentifier = savedIdentifier
                 existingItem.photoData = nil
             }
             
@@ -448,6 +475,19 @@ struct EditTransactionView: View {
                 print("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
+        } catch {
+            photoErrorMessage = error.localizedDescription
+            showPhotoErrorAlert = true
+        }
+    }
+
+    private func resolvedPhotoIdentifier() async throws -> String? {
+        guard transactionImage != nil else { return nil }
+        if let photoAssetIdentifier { return photoAssetIdentifier }
+        if let data = pendingPhotoData ?? selectedTransaction.photoData {
+            return try await PhotoLibraryStore.saveImageData(data)
+        }
+        return nil
     }
 }
 
@@ -552,6 +592,10 @@ struct AddTransactionView: View {
     @State private var showPhotoLibrary = false
     @State private var showPhotoPermissionAlert = false
     @State private var showCameraPermissionAlert = false
+    @State private var photoAssetIdentifier: String?
+    @State private var pendingPhotoData: Data?
+    @State private var photoErrorMessage = ""
+    @State private var showPhotoErrorAlert = false
     
     @available(iOS 16.0, *)
     var body: some View {
@@ -602,6 +646,8 @@ struct AddTransactionView: View {
                         Button("Remove Photo") {
                             self.transactionImage = nil
                             selectedPhoto = nil
+                            photoAssetIdentifier = nil
+                            pendingPhotoData = nil
                         }
                         .foregroundColor(.red)
                     }
@@ -643,7 +689,7 @@ struct AddTransactionView: View {
             }
             .padding()
             .navigationTitle(Text("Add a new Transaction"))
-            Button(action: {addTransaction()}) {
+            Button(action: { Task { await addTransaction() } }) {
                 Text("Save")
             }
         }
@@ -658,6 +704,8 @@ struct AddTransactionView: View {
             CameraView { image in
                 if let resizedImage = image.resizedToMaxDimension(800) {
                     transactionImage = resizedImage
+                    pendingPhotoData = image.jpegData(compressionQuality: 0.9)
+                    photoAssetIdentifier = nil
                 }
                 showCamera = false
             }
@@ -682,19 +730,30 @@ struct AddTransactionView: View {
         } message: {
             Text("Please enable camera access in Settings to take photos.")
         }
+        .alert("Photo Error", isPresented: $showPhotoErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(photoErrorMessage)
+        }
     }
     
-    private func addTransaction() {
-        withAnimation {
+    private func addTransaction() async {
+        do {
+            let savedIdentifier: String?
+            if let photoAssetIdentifier {
+                savedIdentifier = photoAssetIdentifier
+            } else if let pendingPhotoData {
+                savedIdentifier = try await PhotoLibraryStore.saveImageData(pendingPhotoData)
+            } else {
+                savedIdentifier = nil
+            }
+
+            withAnimation {
             // First add a new transaction
             let newItem = Transaction(context: viewContext)
             newItem.pk = UUID()
             newItem.dateTime = dateTime
-            // Save photo if available
-            if let transactionImage = transactionImage,
-               let imageData = transactionImage.jpegData(compressionQuality: 0.03) {
-                newItem.photoData = imageData
-            }
+            newItem.photoAssetIdentifier = savedIdentifier
             // Handle cash in with safe unwrapping
             let cashIn = Decimal(string: cashInText) ?? Decimal.zero
             if cashIn > 0 {
@@ -785,6 +844,10 @@ struct AddTransactionView: View {
                 print("Failed to save transaction: \(nsError), \(nsError.userInfo)")
             }
         }
+        } catch {
+            photoErrorMessage = error.localizedDescription
+            showPhotoErrorAlert = true
+        }
     }
     private func loadSelectedPhoto() async {
         guard let selectedPhoto = selectedPhoto else { return }
@@ -794,6 +857,8 @@ struct AddTransactionView: View {
                let image = UIImage(data: data) {
                 // Resize image to max 800px dimension to save space
                 transactionImage = image.resizedToMaxDimension(800)
+                pendingPhotoData = data
+                photoAssetIdentifier = selectedPhoto.itemIdentifier
             }
         } catch {
             print("Failed to load image: \(error)")

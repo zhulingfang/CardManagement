@@ -8,6 +8,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="note" optional="YES" attributeType="String"/>
         <attribute name="paid" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="photoAssetIdentifier" optional="YES" attributeType="String"/>
         <attribute name="photoData" optional="YES" attributeType="Binary"/>
         <attribute name="sold" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -45,6 +46,7 @@
         <attribute name="cashOut" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="feesAndShipping" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="photoAssetIdentifier" optional="YES" attributeType="String"/>
         <attribute name="photoData" optional="YES" attributeType="Binary"/>
         <attribute name="pk" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="platform" optional="YES" attributeType="String"/>

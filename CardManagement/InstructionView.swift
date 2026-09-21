@@ -14,12 +14,17 @@ struct DetailedInstructionsView: View {
                     
                     instructionSection(
                         title: "Adding New Cards",
-                        content: "1. Navigate to 'Available Cards'\n2. Tap 'Add Card' button\n3. Fill in card details including title, trade-in value, and/or amount paid\n4. Save the card"
+                        content: "1. Navigate to 'Available Cards'\n2. Tap 'Add Card'\n3. Fill in the card details, including the title, trade-in value, and/or amount paid\n4. Optionally select an existing photo or take a new one\n5. Tap 'Save'"
                     )
                     
                     instructionSection(
                         title: "Creating Transactions",
-                        content: "1. Add the traded in cards follow \"Adding New Cards\" \n2. Go to 'Transactions' section and tap 'Add Transaction'\n3. Select cards you're trading in and out\n4. Enter cash amounts and cost for fees and shippings\n5. Specify platform and trader information\n6. Save the transaction"
+                        content: "1. Add traded-in cards by following 'Adding New Cards'\n2. Go to 'Transactions' and tap 'Add Transaction'\n3. Select the cards you're trading in and out\n4. Enter cash amounts, fees, and shipping costs\n5. Specify the platform and trader information\n6. Optionally select an existing photo or take a new one\n7. Tap 'Save'"
+                    )
+
+                    instructionSection(
+                        title: "Card and Transaction Photos",
+                        content: "• Photos are saved in your iOS Photo Library; the app stores a reference to each photo\n• Allow Photo Library access when prompted so the app can save and display photos\n• Photos taken with the camera are added to your Photo Library when you save the card or transaction\n• Removing a photo from a card or transaction removes only the app's reference—it does not delete the photo from your Photo Library\n• If a referenced photo is deleted, unavailable, or belongs to another device, the app displays a Photo Unavailable message; the rest of the card or transaction remains usable"
                     )
                     
                     instructionSection(
@@ -29,7 +34,7 @@ struct DetailedInstructionsView: View {
                     
                     instructionSection(
                         title: "Backup and Restore",
-                        content: "• Go to Settings > Backup & Restore to export your data\n• Tap 'Export App Data' to create a backup file (JSON format)\n• The backup includes all cards, transactions, cash flows, balances, profits, and settings\n• Save the backup file to iCloud Drive or another location\n• To restore, tap 'Restore from Backup' and select your backup file\n• Warning: Restoring will replace ALL current data with the backup data\n• Regular backups are recommended to protect your data"
+                        content: "• Go to Settings > Backup & Restore to export your data as a JSON file\n• 'Export App Data (with Photos)' includes copies of referenced card and transaction photos; this produces a larger backup\n• 'Export App Data (without Photos)' includes records and settings but excludes photos and photo references\n• Save the backup file to iCloud Drive or another secure location\n• To restore, tap 'Restore from Backup' and select your backup file\n• Photos in the backup are added to the device's Photo Library and linked to the restored records\n• If Photo Library access is unavailable during restore, photo data is kept inside the restored app data as a fallback\n• Warning: Restoring replaces ALL current app data and cannot be undone\n• Regular backups are recommended"
                     )
                     
                     instructionSection(
